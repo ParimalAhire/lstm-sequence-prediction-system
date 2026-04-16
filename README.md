@@ -86,16 +86,16 @@ This system takes a sequence of words as input and predicts the most likely next
 
 ---
 
-## Project Structure
+## 📂 Project Structure
 
 ```
 lstm-sequence-prediction/
 │
 ├── notebook/
-│   └── LSTM_Text_Prediction.ipynb   # Colab training notebook (mandatory)
+│   └── LabAssignment_5_LSTM_Text_Prediction.ipynb
 │
 ├── model/                           # Generated after training
-│   ├── lstm_model.h5                # Trained LSTM model
+│   ├── lstm_model.keras             # Trained LSTM model 
 │   ├── tokenizer.pkl                # Fitted Keras tokenizer
 │   └── max_seq_len.pkl              # Max sequence length
 │
@@ -103,11 +103,13 @@ lstm-sequence-prediction/
 │   └── app.py                       # FastAPI deployment
 │
 ├── data/
-│   ├── AllCombined.txt              # Full Kaggle dataset (not committed)
-│   └── dataset_sample.txt           # 3,000 line subset used for training
+│   ├── AllCombined.txt              # Full Kaggle dataset
+│   └── dataset_sample.txt           # Subset used for training
 │
-├── screenshots/
-│   └── api_testing.png              # Swagger UI test proof
+├── screenshots/                     # Output proof
+│   ├── api_docs.png
+│   ├── predict_output.png
+│   └── generate_output.png
 │
 ├── requirements.txt
 └── README.md
