@@ -169,6 +169,18 @@ Swagger UI (interactive docs): `http://127.0.0.1:8000/docs`
 | GET | `/generate?text=...&num_words=5` | Generate multiple next words |
 | GET | `/vocab` | Vocabulary info |
 
+## 📸 Output Screenshots
+
+### API Documentation
+![API Docs](screenshots/api_docs.png)
+
+### Predict Endpoint
+![Predict](screenshots/predict_output.png)
+
+### Generate Endpoint
+![Generate](screenshots/generate_output.png)
+
+
 ### Example Requests
 
 **Predict next word:**
@@ -232,16 +244,4 @@ Predicted Next Word
 | Cell | C_t = f_t ⊙ C_(t-1) + i_t ⊙ C̃_t | Update memory |
 | Output | o_t = σ(W_o · [h_(t-1), x_t] + b_o) | Control output |
 | Hidden | h_t = o_t ⊙ tanh(C_t) | Final output |
-
----
-
-## AI Acknowledgement
-
-As required by the assignment:
-
-| Tool | Purpose | Sections |
-|------|---------|---------|
-| **Claude (Anthropic)** | Code structuring, notebook layout, FastAPI scaffolding | Dataset loading, model architecture, API endpoints, README |
-
-All LSTM concepts, mathematical understanding, and design decisions were reviewed and understood by all group members. AI was used as a coding assistant to accelerate development.
 
