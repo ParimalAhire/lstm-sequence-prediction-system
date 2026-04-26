@@ -10,10 +10,6 @@
 
 ## Assignment Details
 - **Assignment:** LAB ASSIGNMENT 5: LSTM-Based AI Agent for Sequence Prediction
-- **Institution:** MIT Academy of Engineering
-- **Course:** Deep Learning Lab
-- **Opened:** Friday, 10 April 2026
-- **Due:** Friday, 17 April 2026
 
 ---
 
