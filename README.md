@@ -165,9 +165,10 @@ The n8n workflow connects a chat interface directly to the FastAPI:
 > "Hi! 👋 I'm Adam, your LSTM Text Prediction Agent. Send me any text and I'll predict the next word!"
 
 **Example predictions:**
-- "hello world is" → "hello world is a first of"
-- "my name is" → "my name is a american movie"
-- "the world is" → "the world is a first of"
+**Example predictions:**
+- "adam zampa was" → "adam zampa was born in the"
+- "how are you" → "how are you in the united"
+- "Am I in" → "Am I in the united states"
 
 ---
 
@@ -189,7 +190,7 @@ The n8n workflow connects a chat interface directly to the FastAPI:
 ### Generate Sentence
 - **URL:** `POST /generate`
 - **Request:** `{ "text": "Am I in", "num_words": 3 }`
-- **Response:** `{ "input": "Am I in", "generated_text": "am i in the united states" }`
+- **Response:** `{ "input": "Am I in", "generated_text": "Am I in the united states" }`
 
 ---
 
