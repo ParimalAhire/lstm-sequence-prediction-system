@@ -204,9 +204,9 @@ The LSTM cell manages information through three gates:
 
 ---
 
-## AI Acknowledgement
+## AI Acknowledgement *(Mandatory as per assignment)*
 
 | Tool | Purpose | Sections Used |
 |------|---------|---------------|
-| **Claude (Anthropic)** | Code structuring, notebook layout, FastAPI scaffolding, n8n workflow setup | Dataset loading, preprocessing pipeline, model architecture, API endpoints, Render deployment, n8n agent configuration |
+| **Claude (Anthropic)** | Reference and guidance during implementation | Some parts of API code and deployment configuration |
 
