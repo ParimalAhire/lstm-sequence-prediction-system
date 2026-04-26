@@ -183,13 +183,13 @@ The n8n workflow connects a chat interface directly to the FastAPI:
 
 ### Predict Next Word
 - **URL:** `POST /predict`
-- **Request:** `{ "text": "the world is" }`
-- **Response:** `{ "input": "the world is", "predicted_next_word": "known" }`
+- **Request:** `{ "text": "Am i in" }`
+- **Response:** `{ "input": "Am I in", "predicted_next_word": "the" }`
 
 ### Generate Sentence
 - **URL:** `POST /generate`
-- **Request:** `{ "text": "the world is", "num_words": 3 }`
-- **Response:** `{ "input": "the world is", "generated_text": "the world is a first of" }`
+- **Request:** `{ "text": "Am I in", "num_words": 3 }`
+- **Response:** `{ "input": "Am I in", "generated_text": "am i in the united states" }`
 
 ---
 
