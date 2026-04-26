@@ -8,8 +8,17 @@
 
 ---
 
+## Assignment Details
+- **Assignment:** LAB ASSIGNMENT 5: LSTM-Based AI Agent for Sequence Prediction
+- **Institution:** MIT Academy of Engineering
+- **Course:** Deep Learning Lab
+- **Opened:** Friday, 10 April 2026
+- **Due:** Friday, 17 April 2026
+
+---
+
 ## Project Overview
-This project implements an **LSTM-based Next Word Prediction System** as part of the Deep Learning Lab. The system is trained on the Simple English Wikipedia dataset and deployed using **FastAPI** to create an industry-relevant AI agent.
+This project implements an **LSTM-based Next Word Prediction System** trained on the Simple English Wikipedia dataset. The system is deployed using **FastAPI** on Render (cloud) and integrated into an **n8n AI Agent workflow** named **Adam** — creating a complete end-to-end industry-relevant AI system.
 
 ### Key Features
 - **NLP Preprocessing Pipeline** — Lowercasing, special character removal, n-gram sequence generation, pre-padding
@@ -17,24 +26,27 @@ This project implements an **LSTM-based Next Word Prediction System** as part of
 - **Memory-Efficient Training** — Uses sparse categorical crossentropy (avoids one-hot encoding RAM overhead)
 - **Early Stopping + Checkpointing** — Saves best model weights, protects against Colab disconnects
 - **FastAPI Deployment** — Two endpoints: `/predict` (next word) and `/generate` (sentence continuation)
+- **n8n AI Agent (Adam)** — Public chat interface powered by the LSTM API
+- **UptimeRobot Monitoring** — Keeps the Render service alive with health checks every 5 minutes
 
 ---
 
 ## Project Structure
 
 ```
-DeepLearning_Lab5/
+Lab-Assignment-5-lstm-sequence-prediction/
 │
 ├── LSTM_Text_Prediction.ipynb   # Main training notebook (run on Google Colab)
 ├── app.py                       # FastAPI deployment server
-├── requirements.txt             # Python dependencies
+├── requirements.txt             # Python dependencies for Render
 ├── render.yaml                  # Render cloud deployment config
+├── .python-version              # Python 3.11.0 (required for Keras 3.13.2)
 ├── README.md                    # This file
 │
-├── dataset/                     # PUT YOUR DATASET FILE HERE
+├── dataset/                     # Dataset folder
 │   └── AllCombined.txt          # Simple English Wikipedia plain text
 │
-└── model/                       # Generated after training (do not edit)
+└── model/                       # Trained model files
     ├── lstm_model.keras         # Trained LSTM model
     ├── tokenizer.pkl            # Fitted Keras tokenizer
     └── max_seq_len.pkl          # Max sequence length (required by API)
@@ -44,10 +56,13 @@ DeepLearning_Lab5/
 
 ## Dataset
 
-**Dataset:** Plain Text Wikipedia (Simple English)
-**Source:** https://www.kaggle.com/datasets/josephrmartinez/simple-english-wikipedia
-**File to use:** AllCombined.txt
-**Place it in:** dataset/AllCombined.txt inside this project folder before zipping
+| Property | Details |
+|----------|---------|
+| Name | Plain Text Wikipedia (Simple English) |
+| Source | https://www.kaggle.com/datasets/josephrmartinez/simple-english-wikipedia |
+| File | AllCombined.txt |
+| Full Size | 249,396 articles, 31M tokens, ~400MB |
+| Subset Used | Random 3,000 lines (seed=42 for reproducibility) |
 
 ---
 
@@ -55,92 +70,146 @@ DeepLearning_Lab5/
 
 | Component | Technology |
 |-----------|-----------|
-| Language | Python 3.x |
-| Deep Learning | TensorFlow / Keras |
+| Language | Python 3.11 |
+| Deep Learning | TensorFlow 2.19 / Keras 3.13.2 |
 | API Framework | FastAPI + Uvicorn |
-| Data Analysis | NumPy, Matplotlib |
-| Notebook | Jupyter / Google Colab |
-| Deployment | Render (cloud) |
+| Training Environment | Google Colab |
+| Cloud Deployment | Render (free tier) |
+| AI Agent Workflow | n8n Cloud |
+| Uptime Monitoring | UptimeRobot |
+
+---
+
+## Architecture
+
+```
+User
+  │
+  ▼
+n8n Chat Agent (Adam)
+  │  Chat Trigger → HTTP Request → Respond to Webhook
+  ▼
+FastAPI on Render
+  │  POST /generate
+  ▼
+LSTM Model
+  │  Embedding → LSTM(150) → Dropout(0.2) → Dense(softmax)
+  ▼
+Predicted Text
+```
+
+---
+
+## Live Deployments
+
+| Service | URL |
+|---------|-----|
+| FastAPI (Render) | https://lstm-sequence-prediction-system.onrender.com |
+| API Docs (Swagger) | https://lstm-sequence-prediction-system.onrender.com/docs |
+| Adam Chat Agent (n8n) | https://parimalahire18.app.n8n.cloud/webhook/6b5ee29f-0e50-48e8-86bc-f98a124ba40c/chat |
 
 ---
 
 ## Step 1 — Train the Model on Google Colab
 
-1. Place AllCombined.txt inside the dataset/ folder
-2. Zip the entire project folder → DeepLearning_Lab5.zip
-3. Upload the zip to Google Drive
-4. Open LSTM_Text_Prediction.ipynb in Google Colab
-5. Run all cells — it will:
-   - Mount your Drive and extract the zip automatically
-   - Clean and preprocess the text
-   - Train the LSTM model (up to 80 epochs with early stopping)
-   - Save model/lstm_model.keras, model/tokenizer.pkl, model/max_seq_len.pkl
-6. Download the 3 saved model files from Colab
+1. Place `AllCombined.txt` inside the `dataset/` folder on Google Drive at:
+   `My Drive/Lab-Assignment-5-lstm-sequence-prediciton/dataset/AllCombined.txt`
+2. Open `LSTM_Text_Prediction.ipynb` in Google Colab
+3. Run all cells — it will:
+   - Mount your Drive and load the dataset automatically
+   - Randomly sample 3,000 lines (seed=42)
+   - Clean and preprocess the text (lowercase, remove special chars)
+   - Build n-gram sequences and pad them
+   - Train the LSTM model (up to 80 epochs with early stopping, patience=10)
+   - Save `model/lstm_model.keras`, `model/tokenizer.pkl`, `model/max_seq_len.pkl`
+4. Download the 3 saved model files from Colab
 
 ---
 
 ## Step 2 — Run the API Locally
 
-Place the downloaded model/ folder in the project root, then:
+Place the downloaded `model/` folder in the project root, then:
 
 ```bash
 pip install -r requirements.txt
 python -m uvicorn app:app --reload
 ```
 
-API will be live at http://localhost:8000
+API will be live at `http://localhost:8000`
 
 ---
 
-## Step 3 — Deploy Publicly on Render
+## Step 3 — Deploy on Render
 
-1. Push the project (with model/ folder) to a GitHub repo
+1. Push the project to GitHub (with `model/` folder included)
 2. Go to render.com → New → Web Service
-3. Connect your GitHub repo
-4. Render auto-detects render.yaml and configures everything
-5. Click Deploy — you will get a public URL like:
-   https://lstm-next-word-api.onrender.com
+3. Connect the GitHub repo
+4. Set:
+   - **Build Command:** `pip install -r requirements.txt`
+   - **Start Command:** `uvicorn app:app --host 0.0.0.0 --port $PORT`
+5. Click Deploy
+
+---
+
+## Step 4 — n8n AI Agent (Adam)
+
+The n8n workflow connects a chat interface directly to the FastAPI:
+
+| Node | Type | Purpose |
+|------|------|---------|
+| When chat message received | Chat Trigger | Receives user input |
+| HTTP Request | POST /generate | Calls FastAPI with user text |
+| Respond to Webhook | Text Response | Returns prediction to chat |
+
+**Adam's greeting:**
+> "Hi! 👋 I'm Adam, your LSTM Text Prediction Agent. Send me any text and I'll predict the next word!"
+
+**Example predictions:**
+- "hello world is" → "hello world is a first of"
+- "my name is" → "my name is a american movie"
+- "the world is" → "the world is a first of"
 
 ---
 
 ## API Documentation
 
 ### Home
-- URL: GET /
-- Response: Status message and instructions
+- **URL:** `GET /`
+- **Response:** `{"message": "LSTM Next Word Prediction API is running!"}`
+
+### Health Check
+- **URL:** `HEAD /health`
+- **Response:** 200 OK (used by UptimeRobot)
 
 ### Predict Next Word
-- URL: POST /predict
-- Request:  { "text": "the world is" }
-- Response: { "input": "the world is", "predicted_next_word": "known" }
+- **URL:** `POST /predict`
+- **Request:** `{ "text": "the world is" }`
+- **Response:** `{ "input": "the world is", "predicted_next_word": "known" }`
 
 ### Generate Sentence
-- URL: POST /generate
-- Request:  { "text": "the world is", "num_words": 4 }
-- Response: { "input": "the world is", "generated_text": "the world is known as a" }
-
-### Interactive Docs
-- Swagger UI: http://localhost:8000/docs
-- Redoc:      http://localhost:8000/redoc
+- **URL:** `POST /generate`
+- **Request:** `{ "text": "the world is", "num_words": 3 }`
+- **Response:** `{ "input": "the world is", "generated_text": "the world is a first of" }`
 
 ---
 
-## LSTM Mathematical Model Summary
+## LSTM Mathematical Model
+
+The LSTM cell manages information through three gates:
 
 | Gate | Equation | Purpose |
 |------|----------|---------|
-| Forget Gate  | f_t = sigmoid(W_f . [h_(t-1), x_t] + b_f)    | Discard irrelevant past info   |
-| Input Gate   | i_t = sigmoid(W_i . [h_(t-1), x_t] + b_i)    | Select new info to store       |
-| Cell State   | C_t = f_t * C_(t-1) + i_t * C~_t             | Long-term memory carrier       |
-| Output Gate  | o_t = sigmoid(W_o . [h_(t-1), x_t] + b_o)    | Control what to output         |
-| Hidden State | h_t = o_t * tanh(C_t)                         | Short-term output / next input |
+| Forget Gate | f_t = sigmoid(W_f . [h_(t-1), x_t] + b_f) | Discard irrelevant past info |
+| Input Gate | i_t = sigmoid(W_i . [h_(t-1), x_t] + b_i) | Select new info to store |
+| Cell State | C_t = f_t * C_(t-1) + i_t * tanh(W_c . [h_(t-1), x_t] + b_c) | Long-term memory carrier |
+| Output Gate | o_t = sigmoid(W_o . [h_(t-1), x_t] + b_o) | Control what to output |
+| Hidden State | h_t = o_t * tanh(C_t) | Short-term output / next input |
 
 ---
 
-## AI Acknowledgement (Mandatory as per assignment)
+## AI Acknowledgement
 
 | Tool | Purpose | Sections Used |
 |------|---------|---------------|
-| Claude (Anthropic) | Code structuring, notebook layout, FastAPI scaffolding, README | Dataset loading, preprocessing, model architecture, API code, deployment config |
+| **Claude (Anthropic)** | Code structuring, notebook layout, FastAPI scaffolding, n8n workflow setup | Dataset loading, preprocessing pipeline, model architecture, API endpoints, Render deployment, n8n agent configuration |
 
-All LSTM concepts, mathematical understanding, and design decisions were reviewed and understood by the team. AI was used as a coding assistant, not as a replacement for learning.
